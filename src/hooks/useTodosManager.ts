@@ -23,7 +23,6 @@ export const useTodosManager = () => {
   const [filter, setFilter] = useState<TodoStatus>(TodoStatus.All);
 
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
-  const [isAdding, setIsAdding] = useState<boolean>(false);
 
   const [loadingIds, setLoadingIds] = useState<number[]>([]);
 
@@ -31,12 +30,9 @@ export const useTodosManager = () => {
 
   const { inputRef, setShouldFocus } = useFocus();
 
-  const activeError = useCallback(
-    (message: string) => {
-      setErrorMessage(message);
-    },
-    [setErrorMessage],
-  );
+  const activeError = useCallback((message: string) => {
+    setErrorMessage(message);
+  }, []);
 
   const handleAddTodo = useCallback(() => {
     const trimmedTitle = newTodoTitle.trim();
@@ -50,7 +46,6 @@ export const useTodosManager = () => {
     }
 
     setErrorMessage('');
-    setIsAdding(true);
 
     const newTempTodo: Todo = {
       id: 0,
@@ -60,6 +55,7 @@ export const useTodosManager = () => {
     };
 
     setTempTodo(newTempTodo);
+    setLoadingIds(prev => [...prev, newTempTodo.id]);
 
     addTodo(trimmedTitle)
       .then(addedTodo => {
@@ -72,19 +68,10 @@ export const useTodosManager = () => {
         setTempTodo(null);
       })
       .finally(() => {
-        setIsAdding(false);
+        setLoadingIds(prev => prev.filter(id => id !== newTempTodo.id));
         setShouldFocus(true);
       });
-  }, [
-    activeError,
-    setShouldFocus,
-    setTodos,
-    setTempTodo,
-    setIsAdding,
-    setErrorMessage,
-    newTodoTitle,
-    setNewTodoTitle,
-  ]);
+  }, [activeError, setShouldFocus, newTodoTitle]);
 
   const handleToggleTodo = useCallback(
     (todoId: number) => {
@@ -218,14 +205,7 @@ export const useTodosManager = () => {
         );
         setShouldFocus(true);
       });
-  }, [
-    todos,
-    allCompleted,
-    setLoadingIds,
-    setTodos,
-    activeError,
-    setShouldFocus,
-  ]);
+  }, [todos, allCompleted, activeError, setShouldFocus]);
 
   const handleUpdateTodoTitle = useCallback(
     (
@@ -274,7 +254,7 @@ export const useTodosManager = () => {
           setShouldFocus(true);
         });
     },
-    [setLoadingIds, setTodos, activeError, setShouldFocus],
+    [activeError, setShouldFocus],
   );
 
   useEffect(() => {
@@ -312,7 +292,6 @@ export const useTodosManager = () => {
     errorMessage,
     filter,
     tempTodo,
-    isAdding,
     loadingIds,
     allCompleted,
     activeTodosCount,

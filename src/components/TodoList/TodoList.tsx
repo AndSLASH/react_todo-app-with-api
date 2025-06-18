@@ -38,13 +38,13 @@ export const TodoList: FC<TodoListProps> = memo(
         ))}
         {tempTodo && (
           <TodoItem
-            key={0}
+            key={`temp-${tempTodo.id}`}
             todo={tempTodo}
             onToggle={() => {}}
             onDelete={onDelete}
             isLoading={true}
             isTemporary={true}
-            onUpdateTitle={() => {}}
+            onUpdateTitle={onUpdateTitle}
           />
         )}
       </section>

@@ -20,7 +20,6 @@ export const App: React.FC = () => {
     errorMessage,
     filter,
     tempTodo,
-    isAdding,
     loadingIds,
     allCompleted,
     activeTodosCount,
@@ -63,7 +62,7 @@ export const App: React.FC = () => {
           )}
           <NewTodoForm
             onAddTodo={handleAddTodo}
-            isAdding={isAdding || loading}
+            isDisabled={tempTodo !== null}
             inputRef={inputRef}
             value={newTodoTitle}
             onChange={setNewTodoTitle}

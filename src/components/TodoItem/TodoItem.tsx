@@ -98,7 +98,7 @@ export const TodoItem: FC<TodoItemProps> = memo(
             type="checkbox"
             className="todo__status"
             checked={todo.completed}
-            disabled={isLoading || isSaving}
+            disabled={isLoading || isSaving || isTemporary}
             onChange={() => onToggle(todo.id)}
             aria-label="Toggle todo status"
           />
@@ -114,7 +114,7 @@ export const TodoItem: FC<TodoItemProps> = memo(
             onBlur={handleSave}
             onKeyDown={handleKeyDown}
             ref={editInputRef}
-            disabled={isLoading || isSaving}
+            disabled={isLoading || isSaving || isTemporary}
             aria-label="Edit todo title"
             placeholder="Empty todo will be deleted"
           />
@@ -133,13 +133,13 @@ export const TodoItem: FC<TodoItemProps> = memo(
               {todo.title}
             </span>
 
-            {!isLoading && !isSaving && (
+            {!isLoading && !isSaving && !isTemporary && (
               <button
                 type="button"
                 className="todo__remove"
                 data-cy="TodoDelete"
                 onClick={() => onDelete(todo.id)}
-                disabled={isLoading || isSaving}
+                disabled={isLoading || isSaving || isTemporary}
               >
                 ×
               </button>
